@@ -1,24 +1,46 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shortener v2</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shortener v2</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 
-
 <div class="container">
     <h1 class="title">Simple url shortener</h1>
-    <form action="source/main.php" method="post">
-        <input type="url" name="url" placeholder="Введите ссылку..." autocomplete="off" name="url">
-        <input type="submit" name="submit" value="Сократить" id="btn" >
-    </form>
+ <form name="mainForm">
+ <input type="url" name="url" placeholder="Введите ссылку..." autocomplete="off" >
+ <input type="submit" name="submit" value="Сократить" id="btn" >
+     <div id="output">
+
+     </div>
+ </form>
 </div>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let output = document.querySelector('#output');
+        let mainForm = document.querySelector('form[name=mainForm]');
+        mainForm.addEventListener('submit',function (e) {
+            let userUrl = encodeURIComponent(mainForm.elements.url.value);
+            let xhr = new XMLHttpRequest();
+            e.preventDefault();
+            xhr.open('POST', 'source/main.php');
+            xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+            xhr.send('url='+userUrl);
+            xhr.onreadystatechange = function(){
+                if (xhr.readyState===4 && xhr.status === 200){
+                    output.innerHTML=xhr.responseText;
+                }
+            }
 
+        });
+    });
+</script>
 
 
 </body>
